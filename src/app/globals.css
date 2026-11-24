@@ -1,0 +1,133 @@
+@import "tailwindcss";
+@import "./theme.css";
+@plugin "@tailwindcss/typography";
+
+/*
+ * Tailwind names for the theme tokens. Edit values in theme.css, not here.
+ * Usage: bg-page, bg-page-soft, bg-surface, bg-surface-2, text-ink,
+ * text-muted, text-faint, border-line, border-line-strong, bg-primary,
+ * text-primary-ink, text-accent, text-danger, rounded-field, rounded-card,
+ * rounded-panel, rounded-pill, shadow-lift, font-heading.
+ */
+@theme inline {
+  --color-page: var(--site-bg);
+  --color-page-soft: var(--site-bg-soft);
+  --color-surface: var(--site-surface);
+  --color-surface-2: var(--site-surface-2);
+  --color-ink: var(--site-ink);
+  --color-muted: var(--site-muted);
+  --color-faint: var(--site-faint);
+  --color-line: var(--site-line);
+  --color-line-strong: var(--site-line-strong);
+  --color-primary: var(--site-primary);
+  --color-primary-ink: var(--site-primary-ink);
+  --color-accent: var(--site-accent);
+  --color-danger: var(--site-danger);
+
+  --font-sans: var(--site-font-sans);
+  --font-heading: var(--site-font-heading);
+  --font-mono: var(--site-font-mono);
+
+  --radius-field: var(--site-radius-sm);
+  --radius-card: var(--site-radius);
+  --radius-panel: var(--site-radius-lg);
+  --radius-pill: var(--site-radius-pill);
+
+  --shadow-lift: var(--site-lift);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Keep anchored sections clear of the sticky header. */
+section[id] {
+  scroll-margin-top: 72px;
+}
+
+body {
+  background: var(--site-bg);
+  color: var(--site-ink);
+  font-family: var(--site-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--site-font-heading);
+  letter-spacing: var(--site-heading-tracking);
+}
+
+/* Article body: HTML published from the dashboard's Articles page. */
+.article-body {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--site-ink);
+}
+
+.article-body > * + * {
+  margin-top: 1.25rem;
+}
+
+.article-body h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  line-height: 1.15;
+  font-weight: 650;
+  color: var(--site-ink);
+}
+
+.article-body h3 {
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  line-height: 1.25;
+  font-weight: 650;
+  color: var(--site-ink);
+}
+
+.article-body p,
+.article-body li {
+  color: var(--site-muted);
+}
+
+.article-body strong {
+  color: var(--site-ink);
+  font-weight: 650;
+}
+
+.article-body ul,
+.article-body ol {
+  padding-left: 1.35rem;
+}
+
+.article-body ul {
+  list-style: disc;
+}
+
+.article-body ol {
+  list-style: decimal;
+}
+
+.article-body blockquote {
+  border-left: 2px solid var(--site-accent);
+  padding-left: 1.25rem;
+  color: var(--site-ink);
+  font-style: italic;
+}
+
+.article-body a {
+  color: var(--site-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.article-body img {
+  border-radius: var(--site-radius);
+  max-width: 100%;
+  height: auto;
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "solo-os-site",
+  "compatibility_date": "2026-05-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": ".open-next/worker.js",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".open-next/assets"
+  },
+  // Service binding to your dashboard Worker (same Cloudflare account).
+  // Lead capture and checkout use it so workers.dev sites can reach the dashboard.
+  // Set "service" to your dashboard Worker's name.
+  "services": [{ "binding": "BACKEND_WORKER", "service": "REPLACE_DASHBOARD_WORKER_NAME" }],
+  "observability": {
+    "enabled": true
+  },
+  // Runtime copies of the NEXT_PUBLIC_ values (Workers cannot read NEXT_PUBLIC_ at runtime).
+  "vars": {
+    "SUPABASE_URL": "REPLACE_SUPABASE_URL",
+    "SUPABASE_ANON_KEY": "REPLACE_SUPABASE_ANON_KEY",
+    "BACKEND_URL": "REPLACE_DASHBOARD_URL"
+  }
+  // Secrets (set with `npx wrangler secret put <NAME> --name solo-os-site`):
+  // SUPABASE_SERVICE_ROLE_KEY, API_SECRET_KEY, CRM_CAPTURE_KEY,
+  // CHECKOUT_API_KEY (for checkout buttons), and optionally RESEND_API_KEY, RESEND_WEBHOOK_SECRET.
+  // CRM_CAPTURE_KEY must equal the capture key shown in your dashboard's CRM settings.
+  // CHECKOUT_API_KEY is a dashboard agent key with only money:checkout (dashboard AGENT-KEYS.md).
+}

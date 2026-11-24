@@ -1,0 +1,69 @@
+/*
+ * Site theme: the one place for colours, fonts, radius and shadow.
+ *
+ * Change a value here and every page follows (sales page, articles, header,
+ * footer, forms). Components only use these tokens through the Tailwind
+ * names mapped in globals.css (bg-surface, text-ink, border-line, ...), so
+ * a restyle never needs to touch page markup for colour or shape.
+ *
+ * Fonts: --font-geist-sans and --font-geist-mono are loaded in
+ * src/app/layout.tsx with next/font. To use another Google font, swap the
+ * import there; to use a system font, replace the var() below with a stack.
+ *
+ * Light is the default. To try the dark palette, add data-theme="dark" to
+ * the <html> tag in src/app/layout.tsx.
+ */
+
+:root {
+  /* Surfaces */
+  --site-bg: #f7f8f6;          /* page background */
+  --site-bg-soft: #efefeb;     /* alternating section band */
+  --site-surface: #fefefe;     /* cards, inputs */
+  --site-surface-2: #e8e7e2;   /* image placeholders, quiet fills */
+
+  /* Text */
+  --site-ink: #1c1a17;                     /* headings, body */
+  --site-muted: rgba(28, 26, 23, 0.64);    /* secondary text */
+  --site-faint: rgba(28, 26, 23, 0.45);    /* captions, meta */
+
+  /* Lines */
+  --site-line: rgba(28, 26, 23, 0.09);
+  --site-line-strong: rgba(28, 26, 23, 0.18);
+
+  /* Actions */
+  --site-primary: #1c1a17;       /* main button */
+  --site-primary-ink: #ffffff;   /* text on main button */
+  --site-accent: #16c97e;        /* highlights, step numbers, success */
+  --site-danger: #e5484d;        /* form errors */
+
+  /* Type */
+  --site-font-sans: var(--font-geist-sans), "Inter", system-ui, -apple-system, sans-serif;
+  --site-font-heading: var(--site-font-sans);
+  --site-font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --site-heading-tracking: -0.02em;
+
+  /* Shape */
+  --site-radius-sm: 8px;     /* inputs, small chips */
+  --site-radius: 12px;       /* cards */
+  --site-radius-lg: 20px;    /* large panels */
+  --site-radius-pill: 999px; /* buttons */
+  --site-lift: 0 1px 3px rgba(15, 15, 15, 0.06), 0 4px 12px -2px rgba(15, 15, 15, 0.07);
+
+  /* Layout */
+  --site-max-width: 1080px;
+}
+
+html[data-theme="dark"] {
+  --site-bg: #0e1116;
+  --site-bg-soft: #12161c;
+  --site-surface: #161a21;
+  --site-surface-2: #1c2129;
+  --site-ink: #ffffff;
+  --site-muted: rgba(255, 255, 255, 0.66);
+  --site-faint: rgba(255, 255, 255, 0.42);
+  --site-line: rgba(255, 255, 255, 0.07);
+  --site-line-strong: rgba(255, 255, 255, 0.16);
+  --site-primary: #ffffff;
+  --site-primary-ink: #0e1116;
+  --site-lift: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 12px -2px rgba(0, 0, 0, 0.35);
+}
