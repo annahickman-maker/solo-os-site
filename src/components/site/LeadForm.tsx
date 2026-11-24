@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import type { LeadFormCopy } from "@/site.config";
+import { events } from "@/lib/analytics/tracker";
 
 type Status = "idle" | "sending" | "done" | "error";
 
@@ -30,7 +31,9 @@ export default function LeadForm({ copy }: { copy: LeadFormCopy }) {
         }),
       });
       const result = (await response.json().catch(() => ({}))) as { ok?: boolean };
-      setStatus(response.ok && result.ok ? "done" : "error");
+      const ok = response.ok && result.ok === true;
+      if (ok) events.emailCapture(copy.source || copy.formId || "form");
+      setStatus(ok ? "done" : "error");
     } catch {
       setStatus("error");
     }

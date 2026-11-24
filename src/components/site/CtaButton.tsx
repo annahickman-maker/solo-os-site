@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { CtaButton as CtaButtonConfig, SiteConfig } from "@/site.config";
 import { LEAD_SECTION_ID } from "@/lib/cta";
+import { events } from "@/lib/analytics/tracker";
 import SmartLink from "./SmartLink";
 import { buttonClass, type ButtonVariant } from "./ButtonLink";
 
@@ -55,24 +56,33 @@ export default function CtaButton({
   const [error, setError] = useState("");
   const classes = buttonClass(variant, className);
   const action = cta.action;
+  // Every selling button counts as a click on the dashboard's Website report.
+  const trackClick = () => events.ctaClick(`${action.type}: ${cta.label}`.slice(0, 120));
 
   if (action.type === "lead") {
     return (
-      <a href={`/#${LEAD_SECTION_ID}`} onClick={goToLeadForm} className={classes}>
+      <a
+        href={`/#${LEAD_SECTION_ID}`}
+        onClick={(event) => {
+          trackClick();
+          goToLeadForm(event);
+        }}
+        className={classes}
+      >
         {cta.label}
       </a>
     );
   }
   if (action.type === "booking") {
     return (
-      <a href={action.url} target="_blank" rel="noopener noreferrer" className={classes}>
+      <a href={action.url} target="_blank" rel="noopener noreferrer" onClick={trackClick} className={classes}>
         {cta.label}
       </a>
     );
   }
   if (action.type === "link") {
     return (
-      <SmartLink href={action.href} className={classes}>
+      <SmartLink href={action.href} onClick={trackClick} className={classes}>
         {cta.label}
       </SmartLink>
     );
@@ -82,6 +92,7 @@ export default function CtaButton({
     if (action.type !== "checkout" || opening) return;
     setOpening(true);
     setError("");
+    trackClick();
     try {
       const response = await fetch("/api/checkout", {
         method: "POST",
@@ -90,6 +101,7 @@ export default function CtaButton({
       });
       const result = (await response.json().catch(() => ({}))) as { url?: string; error?: ErrorCode };
       if (response.ok && typeof result.url === "string" && result.url.startsWith("https://")) {
+        events.checkoutStart(action.productSlug);
         window.location.assign(result.url);
         return; // keep the button busy while the browser leaves
       }

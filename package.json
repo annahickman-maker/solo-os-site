@@ -1,7 +1,7 @@
 {
   "name": "solo-os-site",
   "description": "Solo OS public sales page and articles site, deployed on your own Cloudflare account.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "engines": {
     "node": ">=22"

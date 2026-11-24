@@ -1,10 +1,32 @@
 /**
  * Analytics Event Tracking
  * Client-side event tracker that sends events to /api/analytics.
- * Used by both client components and server-side code.
+ * Page views fire automatically from src/components/site/PageTracker.tsx
+ * (mounted in the root layout); buttons and the email form add clicks,
+ * checkout starts and captures. The route stores them for the dashboard's
+ * Website and Funnels reports (see src/lib/crm/site-events.ts).
+ *
+ * Each browser tab gets a random session id (sessionStorage), so the
+ * dashboard can count funnel steps per session. Page URLs are sent without
+ * their query string, so Stripe's ?session_id= is never recorded.
  */
 
-import type { Json } from "@/types/database";
+const SESSION_KEY = "so_sid";
+
+/** This tab's random session id; null when storage is blocked. */
+export function trackingSessionId(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    let id = window.sessionStorage.getItem(SESSION_KEY);
+    if (!id) {
+      id = `s_${crypto.randomUUID().replace(/-/g, "")}`;
+      window.sessionStorage.setItem(SESSION_KEY, id);
+    }
+    return id;
+  } catch {
+    return null;
+  }
+}
 
 export interface TrackEventParams {
   eventType: string;
@@ -39,10 +61,11 @@ export function trackEvent(params: TrackEventParams): void {
         device_type: /iPad|Tablet/i.test(navigator.userAgent)?'tablet':/Mobile|Android|iPhone/i.test(navigator.userAgent)?'mobile':'desktop',
       } : {}),
     },
-    page_url: params.pageUrl || (typeof window !== "undefined" ? window.location.href : null),
+    page_url: params.pageUrl || (typeof window !== "undefined" ? window.location.origin + window.location.pathname : null),
     page_slug: params.pageSlug || (typeof window !== "undefined" ? window.location.pathname : null),
     content_id: params.contentId || null,
     offer_id: params.offerId || null,
+    session_id: trackingSessionId(),
   };
 
   // Fire and forget
@@ -71,6 +94,9 @@ export const events = {
 
   offerClick: (offerId: string, slug: string) =>
     trackEvent({ eventType: "offer_click", offerId, pageSlug: slug }),
+
+  checkoutStart: (productSlug: string) =>
+    trackEvent({ eventType: "checkout_start", eventData: { product: productSlug } }),
 
   ctaClick: (ctaId: string, variant?: string) =>
     trackEvent({

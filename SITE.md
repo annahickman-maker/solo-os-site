@@ -135,3 +135,20 @@ runs on this site. Cal.com collects the guest's name and email and sends the
 booking to the dashboard through its signed webhook, which creates the lead,
 the appointment and the reminders. Setup steps: dashboard BOOKINGS.md,
 "Booking from the sales page".
+
+## 7. Visitor tracking: what feeds the dashboard's Analytics
+
+Nothing to set up: it runs on every page as soon as the site is live
+(`SUPABASE_SERVICE_ROLE_KEY` set, same Supabase project as the dashboard).
+
+- `src/components/site/PageTracker.tsx` (in the root layout) records a
+  `page_view` for every page opened.
+- Every selling button records a `cta_click`; a checkout button that opens
+  Stripe also records `checkout_start`; a successful email form records
+  `email_capture`.
+- `POST /api/analytics` keeps only known event types (`src/lib/crm/site-events.ts`),
+  drops query strings, and writes them to `analytics_events` (dashboard
+  Analytics > Website) and the steps to `funnel_events` as the `sales-page`
+  funnel (dashboard Analytics > Funnels: sales page, checkout, thank you).
+
+Tracking is skipped in `npm run dev` unless `NEXT_PUBLIC_TRACK_DEV=1`.
